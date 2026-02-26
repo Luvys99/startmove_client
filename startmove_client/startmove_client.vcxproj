@@ -91,6 +91,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,6 +120,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -130,11 +132,15 @@
   <ItemGroup>
     <ClCompile Include="InitNetwork.cpp" />
     <ClCompile Include="KeyInput.cpp" />
+    <ClCompile Include="NetwrokProcess.cpp" />
+    <ClCompile Include="Rendering.cpp" />
     <ClCompile Include="starmove_client.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="InitNetwork.h" />
     <ClInclude Include="KeyInput.h" />
+    <ClInclude Include="NetworkProcess.h" />
+    <ClInclude Include="Rendering.h" />
     <ClInclude Include="starmove_client.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

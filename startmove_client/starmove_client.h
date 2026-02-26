@@ -13,8 +13,11 @@ struct Player
 
 // 다른 플레이어 정보를 저장할 배열
 extern Player PlayerList[10];
-
 extern char screenbuf[MAX_YLENGTH][MAX_XLENGTH];
+
+extern int g_MyID;
+extern Player mydata;
+extern int usercount;
 
 // ID 할당 구조체
 struct IDALLOCATE
