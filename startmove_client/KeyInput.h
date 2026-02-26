@@ -5,4 +5,4 @@
 
 bool KeyInput(Player& p);
 
-void SendPacket(SOCKET sock, STARMOVE& move);
+int SendPacket(SOCKET sock, STARMOVE& move);

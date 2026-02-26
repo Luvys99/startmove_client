@@ -49,7 +49,6 @@ int main()
         }
         
         //네트워크 처리
-
         int select_ret = 0;
         select_ret = Selectfunc(g_socket);
 

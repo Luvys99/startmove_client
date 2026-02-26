@@ -3,7 +3,7 @@
 #include <WinSock2.h>
 #include <stdio.h>
 
-int Selectfunc(SOCKET& sock)
+int Selectfunc(SOCKET sock)
 {
 
     // 소켓 셋 초기화
@@ -21,19 +21,12 @@ int Selectfunc(SOCKET& sock)
     select_ret = select(0, &rset, nullptr, nullptr, &tv);
     if (select_ret == SOCKET_ERROR)
     {
-        int err = WSAGetLastError();
-        if (err == WSAEWOULDBLOCK)
-        {
-            return 1;
-        }
-        else
-        {
-            wprintf(L"select socket create failed error_code : %d\n", err);
-            return -1;
-        }
+        wprintf(L"select socket create failed error_code : %d\n", WSAGetLastError());
+        return -1;
     }
+
     // 조건에 만족하는 소켓의 갯수가 0이상
-    else if (select_ret > 0)
+    if (select_ret > 0)
     {
         ////rset에 소켓이 들어있으면 recv 함수 호출하고 메시지 처리
         if (FD_ISSET(sock, &rset))
@@ -79,8 +72,6 @@ int RecvMessageAndProcess(SOCKET sock)
 
 void ProcessPacket(char* current_message)
 {
-    // ID가 없음을 -1로 표시
-    mydata.p_id = -1;
 
     // 16바이트씩 잘라서 type 확인하고 메시지 처리
     int* type = (int*)current_message;

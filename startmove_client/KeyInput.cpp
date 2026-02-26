@@ -36,14 +36,24 @@ bool KeyInput(Player& p)
 
 }
 
-void SendPacket(SOCKET sock, STARMOVE& move)
+int SendPacket(SOCKET sock, STARMOVE& move)
 {
 	int send_ret;
 	send_ret = send(sock, (char*)&move, 16, 0);
 	if (send_ret == SOCKET_ERROR)
 	{
-		wprintf(L"move data send failed error_code :%d\n", WSAGetLastError());
-		return;
+		int err = WSAGetLastError();
+		if (err == WSAEWOULDBLOCK)
+		{
+			return 1;
+		}
+		else
+		{
+			wprintf(L"move data send failed error_code :%d\n", WSAGetLastError());
+			return -1;
+		}
+		
 	}
 
+	return 0;
 }
