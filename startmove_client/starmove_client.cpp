@@ -61,6 +61,7 @@ int main()
         }
 
         //랜더링
+        memset(screenbuf, ' ', sizeof(screenbuf));
         Render();
     }
 

@@ -12,9 +12,9 @@ struct Player
 };
 
 // 다른 플레이어 정보를 저장할 배열
+// 다른 .cpp에서 사용할 변수들 extern 선언
 extern Player PlayerList[10];
 extern char screenbuf[MAX_YLENGTH][MAX_XLENGTH];
-
 extern int g_MyID;
 extern Player mydata;
 extern int usercount;

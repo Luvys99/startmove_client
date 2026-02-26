@@ -29,6 +29,12 @@ void Render()
 
     for (int y = 0; y < MAX_YLENGTH; y++)
     {
+
+        screenbuf[y][MAX_XLENGTH - 1] = '\0';
+    }
+
+    for (int y = 0; y < MAX_YLENGTH; y++)
+    {
         printf("%s\n", screenbuf[y]);
     }
     Sleep(20);
