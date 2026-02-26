@@ -1,7 +1,7 @@
 #pragma once
 
-#include <winsock2.h>
 #include "starmove_client.h"
+#include <winsock2.h>
 
 bool KeyInput(Player& p);
 

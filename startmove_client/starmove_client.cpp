@@ -1,12 +1,13 @@
 ﻿#pragma comment(lib, "ws2_32")
 #include "starmove_client.h"
 #include "KeyInput.h"
+#include "InitNetwork.h"
 #include <stdio.h>
 #include <Winsock2.h> // 소켓 함수 사용
 #include <WS2tcpip.h> // InetPton, InetNtop 함수 사용
 
 #define SERVERPORT 3000
-char screenbuf[MAX_YLENGTH][MAX_XLENGTH];
+char screenbuf[MAX_YLENGTH][MAX_XLENGTH] = { 0 , };
 
 // 전역에 들어갈 것들
 SOCKET g_socket;
@@ -16,51 +17,20 @@ Player PlayerList[10];
 int main()
 {
     // 윈속 초기화
-    WSADATA wsa;
-    if (WSAStartup(MAKEWORD(2, 2), &wsa) != 0)
-    {
-        wprintf(L"윈속 초기화 실패! error_code : %d\n", WSAGetLastError());
-        return 1;
-    }
+    InitWinsock();
 
-    g_socket = socket(AF_INET, SOCK_STREAM, 0);
-    if (g_socket == INVALID_SOCKET)
-    {
-        wprintf(L"socket create failed!! error_code : %d\n", WSAGetLastError());
-        return 0;
-    }
-
-    // Ipv4 소켓 주소 구조체
-    SOCKADDR_IN serveraddr;
-    ZeroMemory(&serveraddr, sizeof(serveraddr));
-    serveraddr.sin_family = AF_INET;
-    // 문자열 IP 정보를 in_addr 형태로 변환
-    InetPton(AF_INET, L"127.0.0.1", &serveraddr.sin_addr);
-    serveraddr.sin_port = htons(SERVERPORT);
-
-    int connect_ret = connect(g_socket, (SOCKADDR*)&serveraddr, sizeof(serveraddr));
-    if (connect_ret == SOCKET_ERROR)
-    {
-        wprintf(L"connect failed error_code : %d\n", WSAGetLastError());
-        return 0;
-    }
+    // 소켓 생성 및 연결
+    ConnecttoServer(g_socket, L"192.168.219.102", SERVERPORT);
    
-    // 이후 논블라킹 소켓으로 전환
-    u_long on = 1;
-    int non_blocking_ret;
-    non_blocking_ret = ioctlsocket(g_socket, FIONBIO, &on);
-    if (non_blocking_ret == SOCKET_ERROR)
-    {
-        wprintf(L"non_blocking socket failed error_code : %d\n", WSAGetLastError());
-        return 0;
-    }
+    // 논블라킹 소켓으로 전환
+    Non_blocking_tran(g_socket);
 
     char buf[16];
     int recv_ret;
     int usercount = 0;
 
     // ID가 없음을 -1로 표시
-    Player mydata;
+    Player mydata = { 0, };
     mydata.p_id = -1;
     g_MyID = -1;
 
@@ -121,8 +91,10 @@ int main()
                     return 0;
                 }
 
+                int packet_count = select_recv_ret / 16;
+
                 // 160 바이트를 16바이트씩 반복해서 메시지 처리
-                for (int i = 0; i < 10; i++)
+                for (int i = 0; i < packet_count; i++)
                 {
                     // 현재 메시지 주소에서 16바이트씩 증가
                     char* current_message = message + (i * 16);
@@ -133,7 +105,7 @@ int main()
                     {
                     case 0:
                     {
-                        IDALLOCATE* ID_ALLOC = (IDALLOCATE*)message;
+                        IDALLOCATE* ID_ALLOC = (IDALLOCATE*)current_message;
                         g_MyID = ID_ALLOC->ID;
                         break;
                     }
@@ -220,9 +192,9 @@ int main()
             screenbuf[mydata.p_y][mydata.p_x] = '*';
         }
 
-        for (int i = 0; usercount; i++)
+        for (int i = 0; i < usercount; i++)
         {
-            screenbuf[PlayerList[i].p_y][PlayerList[i].p_x] = '@';
+            screenbuf[PlayerList[i].p_y][PlayerList[i].p_x] = '*';
         }
 
         for (int y = 0; y < MAX_YLENGTH; y++)

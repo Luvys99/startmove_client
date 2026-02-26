@@ -128,10 +128,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="InitNetwork.cpp" />
     <ClCompile Include="KeyInput.cpp" />
     <ClCompile Include="starmove_client.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="InitNetwork.h" />
     <ClInclude Include="KeyInput.h" />
     <ClInclude Include="starmove_client.h" />
   </ItemGroup>
