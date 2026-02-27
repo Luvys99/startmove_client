@@ -124,6 +124,13 @@ void ProcessPacket(char* current_message)
         // 내 아이디라면 서버의 좌표로 저장
         if (g_MyID == STAR_M->ID)
         {
+            // 맵에서 벗어난 좌표가 넘어오면 조정
+            if (STAR_M->x >= MAX_XLENGTH) STAR_M->x = MAX_XLENGTH - 2;
+            if (STAR_M->y >= MAX_YLENGTH) STAR_M->y = MAX_YLENGTH - 1;
+
+            if (STAR_M->x < 0) STAR_M->x = 0;
+            if (STAR_M->y < 0) STAR_M->y = 0;
+
             mydata.p_x = STAR_M->x;
             mydata.p_y = STAR_M->y;
         }
@@ -133,6 +140,13 @@ void ProcessPacket(char* current_message)
             {
                 if (PlayerList[j].p_id == STAR_M->ID)
                 {
+                    // 맵에서 벗어난 좌표가 넘어오면 조정
+                    if (STAR_M->x >= MAX_XLENGTH) STAR_M->x = MAX_XLENGTH - 2;
+                    if (STAR_M->y >= MAX_YLENGTH) STAR_M->y = MAX_YLENGTH - 1;
+
+                    if (STAR_M->x < 0) STAR_M->x = 0;
+                    if (STAR_M->y < 0) STAR_M->y = 0;
+
                     PlayerList[j].p_x = STAR_M->x;
                     PlayerList[j].p_y = STAR_M->y;
                     break;

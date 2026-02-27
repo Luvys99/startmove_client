@@ -24,7 +24,7 @@ int main()
     InitWinsock();
 
     // 소켓 생성 및 연결
-    ConnecttoServer(g_socket, L"192.168.219.102", SERVERPORT);
+    ConnecttoServer(g_socket, L"192.168.30.49", SERVERPORT);
    
     // 논블라킹 소켓으로 전환
     Non_blocking_tran(g_socket);
