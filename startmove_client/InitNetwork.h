@@ -2,8 +2,8 @@
 
 #include <winsock2.h>
 
-void InitWinsock();
+int InitWinsock();
 
-void ConnecttoServer(SOCKET& sock, const wchar_t* ip, int port);
+int ConnecttoServer(SOCKET& sock, const wchar_t* ip, int port);
 
-void Non_blocking_tran(SOCKET sock);
+int Non_blocking_tran(SOCKET sock);

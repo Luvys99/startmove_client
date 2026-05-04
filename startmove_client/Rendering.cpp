@@ -10,11 +10,11 @@ void Render()
 
     for (int y = 0; y < MAX_YLENGTH; y++)
     {
-        for (int x = 0; x < MAX_XLENGTH; x++)
+        for (int x = 0; x < MAX_XLENGTH - 1; x++)
         {
             screenbuf[y][x] = ' ';
         }
-        screenbuf[y][MAX_XLENGTH - 1] = '\0';
+        screenbuf[y][MAX_XLENGTH -1] = '\0';
     }
 
     if (g_MyID != -1)
@@ -30,12 +30,13 @@ void Render()
     for (int y = 0; y < MAX_YLENGTH; y++)
     {
 
-        screenbuf[y][MAX_XLENGTH - 1] = '\0';
+        screenbuf[y][MAX_XLENGTH -1] = '\0';
     }
 
     for (int y = 0; y < MAX_YLENGTH; y++)
     {
         printf("%s\n", screenbuf[y]);
     }
+
     Sleep(20);
 }

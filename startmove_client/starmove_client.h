@@ -1,7 +1,7 @@
 #pragma once
 
-#define MAX_XLENGTH 80
-#define MAX_YLENGTH 23
+#define MAX_XLENGTH 82
+#define MAX_YLENGTH 24
 
 // 플레이어 구조체
 struct Player
@@ -13,7 +13,7 @@ struct Player
 
 // 다른 플레이어 정보를 저장할 배열
 // 다른 .cpp에서 사용할 변수들 extern 선언
-extern Player PlayerList[10];
+extern Player PlayerList[20];
 extern char screenbuf[MAX_YLENGTH][MAX_XLENGTH];
 extern int g_MyID;
 extern Player mydata;

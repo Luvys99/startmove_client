@@ -9,55 +9,73 @@ int Selectfunc(SOCKET sock)
     // 소켓 셋 초기화
     FD_SET rset;
     FD_ZERO(&rset);
-    FD_SET(sock, &rset);
+    FD_SET(sock, &rset); // 소켓 rset에 소켓 등록
 
-    // rset에 소켓이 없어도 로직이 돌아야하기 때문에 0, 0을 집어넣음
+    // rset에 소켓이 없어도 키입력 로직이 돌아야하기 때문에 0, 0을 집어넣음 ( 대기시간 0 )
     timeval tv;
     tv.tv_sec = 0;
     tv.tv_usec = 0;
 
-    //select 함수 호출 ( set에 소켓 없으면 대기하지 않고 리턴 : timeval = {0,0}; )
+    //select 함수 호출
     int select_ret;
     select_ret = select(0, &rset, nullptr, nullptr, &tv);
     if (select_ret == SOCKET_ERROR)
     {
-        wprintf(L"select socket create failed error_code : %d\n", WSAGetLastError());
+        wprintf(L"select failed error_code : %d\n", WSAGetLastError());
         return -1;
     }
-
     // 조건에 만족하는 소켓의 갯수가 0이상
-    if (select_ret > 0)
+    else if (select_ret > 0)
     {
         ////rset에 소켓이 들어있으면 recv 함수 호출하고 메시지 처리
         if (FD_ISSET(sock, &rset))
             return 1;
     }
-
+    // 0이면 타임아웃 ( 대기 시간 동안 recv, send 할 것 없음 )
     return 0;
     
 }
 
+// 랜더링에서 내 플레이어의 x,y가 너무 커지는 것에 대한 원인을 찾아야 됨
+// 내 클라이언트 하나만 돌아다니면 값이 커지진 않은데 다른 클라이언트가 접속되어 있으면
+// 내 플레이어의 데이터가 갑자기 개 커짐 확인해봐야 됨
 int RecvMessageAndProcess(SOCKET sock)
 {
     char message[160] = { 0, };
 
-    int select_recv_ret;
-    select_recv_ret = recv(sock, message, 160, 0);
-    if (select_recv_ret == SOCKET_ERROR)
+    int recv_ret;
+    recv_ret = recv(sock, message, 160, 0);
+    if (recv_ret == SOCKET_ERROR)
     {
-        int err = WSAGetLastError();
-        if (err == WSAEWOULDBLOCK)
+        int errCode = WSAGetLastError();
+        if (errCode == WSAEWOULDBLOCK)
         {
             return 1; 
         }
-        else
+        else if (errCode == 10054 || errCode == 10053) // 정상  
         {
-            wprintf(L"select_socket recv failed error_code :%d\n", err);
+            // 서버( 상대방 )가 종료되서 연결이 끊김
+            wprintf(L"[error] Lost connection to server : %d\n", errCode);
+            return -1;
+        }
+        else if ( errCode == 10038 ) // 비정상
+        {
+            // 이미 닫힌 소켓을 읽으려고 함
+            wprintf(L"[error] WSAENOTSOCK - Attempting to read from a closed socket : 10038\n");
+            return -1;
+        }
+        else // 비정상 or 처리하지 않은 에러 처리
+        {
+            wprintf(L"[error] abnormal or untreated error handling : %d", errCode);
             return -1;
         }
     }
+    else if (recv_ret == 0) // 정상적인 종료 
+    {
+        return -1;
+    }
 
-    int packet_count = select_recv_ret / 16;
+    int packet_count = recv_ret / 16;
 
     // 160 바이트를 16바이트씩 패킷 갯수 만큼 반복해서 메시지 처리
     for (int i = 0; i < packet_count; i++)

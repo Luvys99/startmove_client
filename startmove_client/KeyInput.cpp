@@ -42,18 +42,18 @@ int SendPacket(SOCKET sock, STARMOVE& move)
 	send_ret = send(sock, (char*)&move, 16, 0);
 	if (send_ret == SOCKET_ERROR)
 	{
-		int err = WSAGetLastError();
-		if (err == WSAEWOULDBLOCK)
+		int errCode = WSAGetLastError();
+		if (errCode == WSAEWOULDBLOCK)
 		{
 			return 1;
 		}
 		else
 		{
-			wprintf(L"move data send failed error_code :%d\n", WSAGetLastError());
+			wprintf(L"move packet send failed error_code :%d\n", WSAGetLastError());
 			return -1;
 		}
 		
 	}
 
-	return 0;
+	return 1;
 }
