@@ -142,7 +142,10 @@ void ProcessPacket(char* current_message)
         // 내 아이디라면 서버의 좌표로 저장
         if (g_MyID == STAR_M->ID)
         {
-            // 맵에서 벗어난 좌표가 넘어오면 조정
+            // 클라에서 처리해서 보낸 이동 패킷을 서버가 저장하는데 서버에서는 다시 동기화하기위해서 보내지 않을 것이기 때문에 break;
+            break;
+
+            /*// 맵에서 벗어난 좌표가 넘어오면 조정
             if (STAR_M->x >= MAX_XLENGTH) STAR_M->x = MAX_XLENGTH - 2;
             if (STAR_M->y >= MAX_YLENGTH) STAR_M->y = MAX_YLENGTH - 1;
 
@@ -151,6 +154,7 @@ void ProcessPacket(char* current_message)
 
             mydata.p_x = STAR_M->x;
             mydata.p_y = STAR_M->y;
+            */
         }
         else // 아니면 다른 유저의 좌표에 서버의 좌표로 저장
         {
@@ -158,7 +162,7 @@ void ProcessPacket(char* current_message)
             {
                 if (PlayerList[j].p_id == STAR_M->ID)
                 {
-                    // 맵에서 벗어난 좌표가 넘어오면 조정
+                    // 맵에서 벗어난 좌표가 넘어오면 조정 ( 다른 클라이언트 들이 )
                     if (STAR_M->x >= MAX_XLENGTH) STAR_M->x = MAX_XLENGTH - 2;
                     if (STAR_M->y >= MAX_YLENGTH) STAR_M->y = MAX_YLENGTH - 1;
 

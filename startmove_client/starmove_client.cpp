@@ -32,8 +32,12 @@ int main()
     }
 
     // 소켓 생성 및 연결
-    ConnecttoServer(g_socket, L"192.168.219.102", SERVERPORT);
-   
+    int connect_ret = ConnecttoServer(g_socket, L"192.168.219.100", SERVERPORT);
+    if (connect_ret == -1)
+    {
+        return -1;
+    }
+
     // 논블라킹 소켓으로 전환
     int non_ret = Non_blocking_tran(g_socket);
     if (non_ret == -1)
